@@ -124,7 +124,7 @@ function getTouchInfo(canvas, w, h, e, i = 0) {
  * no image displayed
  */
 p5.prototype._ontouchstart = function(e) {
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   let executeDefault;
   this._setProperty('mouseIsPressed', true);
   this._updateTouchCoords(e);
@@ -203,7 +203,7 @@ p5.prototype._ontouchstart = function(e) {
  * no image displayed
  */
 p5.prototype._ontouchmove = function(e) {
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   let executeDefault;
   this._updateTouchCoords(e);
   this._updateNextMouseCoords(e);
@@ -279,7 +279,7 @@ p5.prototype._ontouchend = function(e) {
   this._setProperty('mouseIsPressed', false);
   this._updateTouchCoords(e);
   this._updateNextMouseCoords(e);
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   let executeDefault;
   if (typeof context.touchEnded === 'function') {
     executeDefault = context.touchEnded(e);

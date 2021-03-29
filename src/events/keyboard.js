@@ -179,7 +179,7 @@ p5.prototype._onkeydown = function(e) {
   this._setProperty('keyCode', e.which);
   this._downKeys[e.which] = true;
   this._setProperty('key', e.key || String.fromCharCode(e.which) || e.which);
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   if (typeof context.keyPressed === 'function' && !e.charCode) {
     const executeDefault = context.keyPressed(e);
     if (executeDefault === false) {
@@ -231,7 +231,7 @@ p5.prototype._onkeyup = function(e) {
   this._setProperty('key', e.key || String.fromCharCode(e.which) || e.which);
   this._setProperty('keyCode', e.which);
 
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   if (typeof context.keyReleased === 'function') {
     const executeDefault = context.keyReleased(e);
     if (executeDefault === false) {
@@ -287,7 +287,7 @@ p5.prototype._onkeypress = function(e) {
   this._setProperty('_lastKeyCodeTyped', e.which); // track last keyCode
   this._setProperty('key', e.key || String.fromCharCode(e.which) || e.which);
 
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   if (typeof context.keyTyped === 'function') {
     const executeDefault = context.keyTyped(e);
     if (executeDefault === false) {

@@ -176,6 +176,7 @@ class p5 {
     this._requestAnimId = 0;
     this._preloadCount = 0;
     this._isGlobal = false;
+    this._context = this;
     this._loop = true;
     this._initializeInstanceVariables();
     this._defaultCanvasSize = {
@@ -237,7 +238,7 @@ class p5 {
         }
       }
 
-      const context = this._isGlobal ? window : this;
+      const context = this._context;
       if (context.preload) {
         // Setup loading screen
         // Set loading screen into dom if not present
@@ -259,7 +260,7 @@ class p5 {
           //it's p5, check if it's global or instance
           if (obj === p5.prototype || obj === p5) {
             if (this._isGlobal) {
-              window[method] = this._wrapPreload(this, method);
+              this._context[method] = this._wrapPreload(this, method);
             }
             obj = this;
           }
@@ -276,7 +277,7 @@ class p5 {
     };
 
     this._runIfPreloadsAreDone = function() {
-      const context = this._isGlobal ? window : this;
+      const context = this._context;
       if (context._preloadCount === 0) {
         const loadingScreen = document.getElementById(context._loadingScreenId);
         if (loadingScreen) {
@@ -291,7 +292,7 @@ class p5 {
     };
 
     this._decrementPreload = function() {
-      const context = this._isGlobal ? window : this;
+      const context = this._context;
       if (typeof context.preload === 'function') {
         context._setProperty('_preloadCount', context._preloadCount - 1);
         context._runIfPreloadsAreDone();
@@ -308,7 +309,7 @@ class p5 {
     };
 
     this._incrementPreload = function() {
-      const context = this._isGlobal ? window : this;
+      const context = this._context;
       context._setProperty('_preloadCount', context._preloadCount + 1);
     };
 
@@ -323,7 +324,7 @@ class p5 {
       );
 
       // return preload functions to their normal vals if switched by preload
-      const context = this._isGlobal ? window : this;
+      const context = this._context;
       if (typeof context.preload === 'function') {
         for (const f in this._preloadMethods) {
           context[f] = this._preloadMethods[f][f];
@@ -406,10 +407,7 @@ class p5 {
     };
 
     this._setProperty = (prop, value) => {
-      this[prop] = value;
-      if (this._isGlobal) {
-        window[prop] = value;
-      }
+      this._context[prop] = value;
     };
 
     /**
@@ -476,19 +474,20 @@ class p5 {
       }
       // remove window bound properties and methods
       if (this._isGlobal) {
+        const context = this._context;
         for (const p in p5.prototype) {
           try {
-            delete window[p];
+            delete context[p];
           } catch (x) {
-            window[p] = undefined;
+            context[p] = undefined;
           }
         }
         for (const p2 in this) {
           if (this.hasOwnProperty(p2)) {
             try {
-              delete window[p2];
+              delete context[p2];
             } catch (x) {
-              window[p2] = undefined;
+              context[p2] = undefined;
             }
           }
         }
@@ -511,6 +510,7 @@ class p5 {
     // assume "global" mode and make everything global (i.e. on the window)
     if (!sketch) {
       this._isGlobal = true;
+      this._context = window;
       p5.instance = this;
       // Loop through methods on the prototype and attach them to the window
       for (const p in p5.prototype) {
@@ -620,7 +620,7 @@ class p5 {
   // can be used in scenarios like unit testing where the window object
   // might not exist
   _createFriendlyGlobalFunctionBinder(options = {}) {
-    const globalObject = options.globalObject || window;
+    const globalObject = options.globalObject || this._context;
     const log = options.log || console.log.bind(console);
     const propsToForciblyOverwrite = {
       // p5.print actually always overwrites an existing global function,

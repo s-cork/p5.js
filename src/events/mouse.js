@@ -587,7 +587,7 @@ p5.prototype._setMouseButton = function(e) {
  * no image displayed
  */
 p5.prototype._onmousemove = function(e) {
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   let executeDefault;
   this._updateNextMouseCoords(e);
   if (!this.mouseIsPressed) {
@@ -670,7 +670,7 @@ p5.prototype._onmousemove = function(e) {
  * no image displayed
  */
 p5.prototype._onmousedown = function(e) {
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   let executeDefault;
   this._setProperty('mouseIsPressed', true);
   this._setMouseButton(e);
@@ -750,7 +750,7 @@ p5.prototype._onmousedown = function(e) {
  * no image displayed
  */
 p5.prototype._onmouseup = function(e) {
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   let executeDefault;
   this._setProperty('mouseIsPressed', false);
   if (typeof context.mouseReleased === 'function') {
@@ -829,7 +829,7 @@ p5.prototype._ondragover = p5.prototype._onmousemove;
  * no image displayed
  */
 p5.prototype._onclick = function(e) {
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   if (typeof context.mouseClicked === 'function') {
     const executeDefault = context.mouseClicked(e);
     if (executeDefault === false) {
@@ -898,7 +898,7 @@ p5.prototype._onclick = function(e) {
  */
 
 p5.prototype._ondblclick = function(e) {
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   if (typeof context.doubleClicked === 'function') {
     const executeDefault = context.doubleClicked(e);
     if (executeDefault === false) {
@@ -965,7 +965,7 @@ p5.prototype._pmouseWheelDeltaY = 0;
  * black 50x50 rect moves up and down with vertical scroll. fuchsia background
  */
 p5.prototype._onwheel = function(e) {
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   this._setProperty('_mouseWheelDeltaY', e.deltaY);
   if (typeof context.mouseWheel === 'function') {
     e.delta = e.deltaY;

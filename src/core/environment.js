@@ -445,7 +445,7 @@ p5.prototype.windowHeight = getWindowHeight();
 p5.prototype._onresize = function(e) {
   this._setProperty('windowWidth', getWindowWidth());
   this._setProperty('windowHeight', getWindowHeight());
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   let executeDefault;
   if (typeof context.windowResized === 'function') {
     executeDefault = context.windowResized(e);

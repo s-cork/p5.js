@@ -659,7 +659,7 @@ p5.prototype._handleMotion = function() {
   } else if (window.orientation === undefined) {
     this._setProperty('deviceOrientation', 'undefined');
   }
-  const context = this._isGlobal ? window : this;
+  const context = this._context;
   if (typeof context.deviceMoved === 'function') {
     if (
       Math.abs(this.accelerationX - this.pAccelerationX) > move_threshold ||
